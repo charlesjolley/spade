@@ -10,9 +10,9 @@
 config :tiki, 
   :required       => [],
   :debug_required => [],
-  :test_dynamic_required => ['core-test'],
+  #:test_dynamic_required => ['core-test'],
   :use_modules    => true,
-  :use_loader     => true,
+  :use_package_info => false,
   :factory_format => :function, # string is not needed here
   :module_lib     => ['lib'],
   :combine_javascript => true # always improve load times
