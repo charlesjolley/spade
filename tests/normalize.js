@@ -23,24 +23,24 @@ Ct.teardown(function(t) {
 
 Ct.test('normalize', function(t) {
   var tiki = t.tiki;
-  t.equal(tiki.normalize('foo/bar'), '(default):foo/bar');
-  t.equal(tiki.normalize('./foo', 'bar/baz'), '(default):bar/foo');
-  t.equal(tiki.normalize('../foo', 'bar/baz'), '(default):foo');
-  t.equal(tiki.normalize('foo/../bar//foo/./baz', 'bar/baz'), '(default):bar/foo/baz');
+  t.equal(tiki.normalize('foo/bar'), 'foo/bar');
+  t.equal(tiki.normalize('./foo', 'bar/baz'), 'bar/foo');
+  t.equal(tiki.normalize('../foo', 'bar/baz'), 'foo/index');
+  t.equal(tiki.normalize('foo/../bar//foo/./baz', 'bar/baz'), 'bar/foo/baz');
 
-  t.equal(tiki.normalize('/foo/./bar'), '(default):foo/bar');
-  t.equal(tiki.normalize('foo/../bar/'), '(default):bar');
-  t.equal(tiki.normalize('/foo/../bar/'), '(default):bar');
+  t.equal(tiki.normalize('/foo/./bar'), 'foo/bar');
+  t.equal(tiki.normalize('foo/../bar/'), 'bar/index');
+  t.equal(tiki.normalize('/foo/../bar/'), 'bar/index');
 
-  t.equal(tiki.normalize('/foo/bar'), '(default):foo/bar');
-  t.equal(tiki.normalize('foo/bar/'), '(default):foo/bar');
-  t.equal(tiki.normalize('/foo/bar/'), '(default):foo/bar');
+  t.equal(tiki.normalize('/foo/bar'), 'foo/bar');
+  t.equal(tiki.normalize('foo/bar/'), 'foo/bar');
+  t.equal(tiki.normalize('/foo/bar/'), 'foo/bar');
   
-  t.equal(tiki.normalize('PKG:foo/bar'), 'PKG:foo/bar');
-  t.equal(tiki.normalize('BAR:foo', 'PKG:bar/baz'), 'BAR:foo');
-  t.equal(tiki.normalize('./foo', 'PKG:bar/baz'), 'PKG:bar/foo');
-  t.equal(tiki.normalize('../foo', 'PKG:bar/baz'), 'PKG:foo');
-  t.equal(tiki.normalize('foo/../bar//foo/./baz', 'PKG:bar/baz'), 'PKG:bar/foo/baz');
+  t.equal(tiki.normalize('PKG/foo/bar'), 'PKG/foo/bar');
+  t.equal(tiki.normalize('BAR/foo', 'PKG/bar/baz'), 'BAR/foo');
+  t.equal(tiki.normalize('./foo', 'PKG/bar/baz'), 'PKG/bar/foo');
+  t.equal(tiki.normalize('../foo', 'PKG/bar/baz'), 'PKG/foo');
+  t.equal(tiki.normalize('foo/../bar//foo/./baz', 'PKG/bar/baz'), 'PKG/bar/foo/baz');
   
 });
 
@@ -48,8 +48,8 @@ Ct.test('normalize package', function(t) {
   var tiki = t.tiki;
   
   tiki.register('sproutcore', {}); // register as a package
-  t.equal(tiki.normalize('sproutcore'), 'sproutcore:index');
-  t.equal(tiki.normalize('foo:sproutcore'), 'foo:sproutcore');
+  t.equal(tiki.normalize('sproutcore'), 'sproutcore/index');
+  t.equal(tiki.normalize('foo/sproutcore'), 'foo/sproutcore');
 });
 
 
