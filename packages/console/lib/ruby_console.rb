@@ -18,5 +18,4 @@ module Spade
 
 end
 
-Spade.current_context['$rubyConsole'] = Spade::Console.new
-  
+Spade.exports = Spade::Console.new

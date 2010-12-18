@@ -17,6 +17,14 @@ module Spade
     @current_context = ctx
   end
   
+  def self.exports
+    @exports
+  end
+  
+  def self.exports=(exports)
+    @exports = exports
+  end
+  
   class Loader
     
     def initialize(ctx)
@@ -36,26 +44,23 @@ module Spade
         if package_info[:directories][dirname]
           dirname = package_info[:directories][dirname]
         else
-          dirname = [dirname]
+          dirname = dirname
         end
       else
         dirname = package_info[:directories]['lib']
-        dirname = ['lib'] if dirname.nil?
+        dirname = 'lib' if dirname.nil?
       end
       
       filename = parts.pop
-      dirname.each do |dir|
-        js_path = File.join(package_info[:path], dir, parts, filename+'.js')
-        rb_path = File.join(package_info[:path], dir, parts, filename+'.rb')
-        if File.exist? js_path
-          load_module id, js_path
-          return nil
-          
-        elsif File.exists? rb_path
-          load_ruby id, rb_path
-          return nil
-        end
+      js_path = File.join(package_info[:path], dirname, parts, filename+'.js')
+      rb_path = File.join(package_info[:path], dirname, parts, filename+'.rb')
+      if File.exist? js_path
+        load_module id, js_path
+        return nil
         
+      elsif File.exists? rb_path
+        load_ruby id, rb_path
+        return nil
       end
       
       return nil
@@ -69,11 +74,23 @@ module Spade
     
     def load_ruby(id, rb_path)
       old_context = Spade.current_context 
-      Spade.current_context = @ctx
-      require rb_path
-      Spade.current_context = old_context
+      old_exports = Spade.exports
       
-      @ctx.eval("spade.register('#{id}', '');")
+      Spade.current_context = @ctx
+      Spade.exports = {}
+      require rb_path
+
+      @ctx['$__rb_exports__'] = Spade.exports || {}
+      
+      Spade.current_context = old_context
+      Spade.exports = old_exports
+      
+      @ctx.eval(%[(function() { 
+        var exp = $__rb_exports__; 
+        spade.register('#{id}', function(r,m,e) { m.exports = exp; }); 
+      })();])
+      
+      @ctx['$__rb_exports__'] = nil
     end
     
     def packages
@@ -106,7 +123,7 @@ module Spade
       json = JSON.load(File.read(json_package)) rescue nil
       return if json.nil?
       
-      directories = json["directories"] || { "lib" => ["lib"] }
+      directories = json["directories"] || { "lib" => "lib" }
       @packages[json["name"]] = { :path => path, :directories => directories }
     end
     

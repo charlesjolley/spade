@@ -11,7 +11,7 @@
   "dependencies": {},
   
   "directories": {
-    "lib": ["lib"]
+    "lib": "lib"
   }
   
 }
