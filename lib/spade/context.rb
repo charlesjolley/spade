@@ -5,17 +5,17 @@
 # ==========================================================================
 
 require 'v8'
-require 'tiki/loader'
+require 'spade/loader'
 
-TIKIJS_PATH = File.expand_path File.join(File.dirname(__FILE__), '..', 'tiki.js')
+TIKIJS_PATH = File.expand_path File.join(File.dirname(__FILE__), '..', 'spade.js')
 
 module Tiki
   
   # find the current path with a package.json or .packages or cur_path
   def self.discover_root(cur_path)
     ret = File.expand_path(cur_path)
-    while ret != '.'
-      return ret if File.exists?(File.join(ret,'package.json')) || File.exists?(File.join(ret,'.packages'))
+    while ret != '/' && ret != '.'
+      return ret if File.exists?(File.join(ret,'package.json')) || File.exists?(File.join(ret,'.spade'))
       ret = File.dirname ret
     end
     
@@ -26,15 +26,15 @@ module Tiki
 
     attr_reader :rootdir
     
-    # Load the tiki and racer-loader.
+    # Load the spade and racer-loader.
     def initialize(opts={})
       @rootdir = opts[:rootdir] || opts['rootdir']
       super(opts) do |ctx|
         ctx.load(TIKIJS_PATH)
         ctx['rubyLoader'] = Loader.new(self)
-        ctx.eval 'tiki.loader = rubyLoader;'
-        ctx.eval 'require = function(id) { return tiki.require(id); };'
-        ctx.eval 'require.async = function(id, done) { return tiki.async(id, done); }; '
+        ctx.eval 'spade.loader = rubyLoader;'
+        ctx.eval 'require = function(id) { return spade.require(id); };'
+        ctx.eval 'require.async = function(id, done) { return spade.async(id, done); }; '
         
         yield(ctx) if block_given?
       end

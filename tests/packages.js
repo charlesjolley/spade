@@ -5,41 +5,41 @@
 // ==========================================================================
 
 var Ct = require('core-test/sync'),
-    Tiki = require('../lib/tiki').Tiki;
+    Tiki = require('../lib/spade').Tiki;
 
-Ct.module('tiki: packages');
+Ct.module('spade: packages');
 
 Ct.setup(function(t) {
-  t.tiki = new Tiki(); 
+  t.spade = new Tiki(); 
 });
 
 Ct.teardown(function(t) { 
-  delete t.tiki;
+  delete t.spade;
 });
 
 Ct.test('should find registered package', function(t) {
   
-  var tiki = t.tiki;
-  tiki.register('PKG', { name: 'PKG' });
+  var spade = t.spade;
+  spade.register('PKG', { name: 'PKG' });
   
-  t.equal(tiki.packageFor('PKG').name, 'PKG');
-  t.equal(tiki.packageFor('PKG:foo/bar').name, 'PKG');
+  t.equal(spade.packageFor('PKG').name, 'PKG');
+  t.equal(spade.packageFor('PKG:foo/bar').name, 'PKG');
   
   
 });
 
 Ct.test('should respect mappings', function(t) {
   
-  var tiki = t.tiki;
-  tiki.register('PKG', { mappings: { foo: 'FOO' } });
+  var spade = t.spade;
+  spade.register('PKG', { mappings: { foo: 'FOO' } });
   
-  tiki.register('PKG:bar', function(require, module, exports) {
+  spade.register('PKG:bar', function(require, module, exports) {
     exports.id = require('foo:foo').id;
   });
   
-  tiki.register('FOO:foo', function(r, m, e) { e.id = 'FOO'; });
+  spade.register('FOO:foo', function(r, m, e) { e.id = 'FOO'; });
   
-  t.equal(tiki.require('PKG:bar').id, 'FOO'); // should remap pkg name
+  t.equal(spade.require('PKG:bar').id, 'FOO'); // should remap pkg name
   
 });
 

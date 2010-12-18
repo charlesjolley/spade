@@ -4,7 +4,7 @@
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
 
-require 'tiki/loader'     
-require 'tiki/context'
+require 'spade/loader'     
+require 'spade/context'
       
   

@@ -2,7 +2,7 @@
 lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
 $:.unshift(lib) if File.exists?(lib)
 
-require 'tiki'
-require 'tiki/cli'
+require 'spade'
+require 'spade/cli'
 
 Tiki::CLI.run(File.basename(__FILE__), Dir.pwd, ARGV)

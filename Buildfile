@@ -7,7 +7,7 @@
 ## CORE TIKI FRAMEWORK
 ##
 
-config :tiki, 
+config :spade, 
   :required       => [],
   :debug_required => [],
   #:test_dynamic_required => ['core-test'],

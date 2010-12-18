@@ -28,17 +28,17 @@ optional modifications:
 # Using Tiki
 
 The easiest way to use Tiki is as part of the abbot build tools.  You can also
-simply load the tiki.js file in the lib directory in your HTML file.  Once 
+simply load the spade.js file in the lib directory in your HTML file.  Once 
 loaded, additional files you load should register modules and packages for 
 your code to use.
 
 To register a module you should use the registration API:
 
-    tiki.register('package/module', function() { ... });
+    spade.register('package/module', function() { ... });
     
 You can now require a module using:
 
-    exports = tiki.require('package/module');
+    exports = spade.require('package/module');
     
 Note that the top level term in a module is always the name of the package.
 
@@ -48,7 +48,7 @@ Within modules, you will be passed a private require function to use instead.
 
 In addition to modules, you can register package info with the same methods:
 
-    tiki.register('package', { ... });
+    spade.register('package', { ... });
     
 The second param should be a JSON hash that contains any relevant keys about
 the package.  Tiki knows how to look at the mappings hash to map symbolic 
@@ -58,7 +58,7 @@ property.
 
 You can also lazy load packages but registering externs:
 
-    tiki.extern({ 'package-name': 'URL' });
+    spade.extern({ 'package-name': 'URL' });
     
 You can now async load packages and Tiki will automatically load the package
 from the URL.

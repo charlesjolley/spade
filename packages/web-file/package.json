@@ -1,0 +1,5 @@
+{
+  "name": "web-file",
+  "version": "0.8.0",
+  "description": "Implements the W3C File API"
+}

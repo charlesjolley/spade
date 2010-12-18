@@ -24,7 +24,7 @@ module Tiki
     end
     
     # exposed to JS.  Find the JS file on disk and register the module
-    def loadFactory(tiki, id, done=nil)
+    def loadFactory(spade, id, done=nil)
       parts = id.split '/'
       package_name = parts.shift
       package_info = packages[package_name]
@@ -63,7 +63,7 @@ module Tiki
     
     def load_module(id, module_path)
       module_contents = File.read(module_path).to_json # encode as string
-      @ctx.eval("tiki.register('#{id}',#{module_contents});")
+      @ctx.eval("spade.register('#{id}',#{module_contents});")
       nil
     end
     
@@ -73,20 +73,20 @@ module Tiki
       require rb_path
       Tiki.current_context = old_context
       
-      @ctx.eval("tiki.register('#{id}', '');")
+      @ctx.eval("spade.register('#{id}', '');")
     end
     
     def packages
       @packages unless @packages.nil?
       @packages = {}
 
-      # add global packages in tiki project
+      # add global packages in spade project
       globals = File.expand_path(File.join(__FILE__, '..', '..', '..', 'packages'))
       package_paths = Dir.glob File.join(globals,'*')
       package_paths.each { |path| add_package(path) }      
       
       # in reverse order of precedence
-      %w[.packages/cache vendor/cache vendor/packages packages].each do |p|
+      %w[.spade/packages vendor/cache vendor/packages packages].each do |p|
         package_paths = Dir.glob File.join(@ctx.rootdir, p.split('/'), '*')
         package_paths.each { |path| add_package(path) }
       end

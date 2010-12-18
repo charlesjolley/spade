@@ -9,7 +9,7 @@ require 'ostruct'
 
 module Tiki
   module CLI
-    def self.run(exename = 'tiki', rootdir = nil, args = [])    
+    def self.run(exename = 'spade', rootdir = nil, args = [])    
       rootdir = Tiki.discover_root(rootdir) unless rootdir.nil?
         
       options = OpenStruct.new
