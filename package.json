@@ -8,6 +8,10 @@
     { "type": "git", "url": "git://github.com/sproutcore/tiki" }
   ],
   
-  "dependencies": {}
+  "dependencies": {},
+  
+  "directories": {
+    "lib": ["lib"]
+  }
   
 }
