@@ -1,4 +1,4 @@
-module Tiki
+module Spade
   
   class Console
     
@@ -18,5 +18,5 @@ module Tiki
 
 end
 
-Tiki.current_context['$rubyConsole'] = Tiki::Console.new
+Spade.current_context['$rubyConsole'] = Spade::Console.new
   

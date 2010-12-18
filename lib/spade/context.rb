@@ -1,5 +1,5 @@
 # ==========================================================================
-# Project:   Tiki - CommonJS Runtime
+# Project:   Spade - CommonJS Runtime
 # Copyright: ©2010 Strobe Inc. All rights reserved.
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
@@ -9,7 +9,7 @@ require 'spade/loader'
 
 TIKIJS_PATH = File.expand_path File.join(File.dirname(__FILE__), '..', 'spade.js')
 
-module Tiki
+module Spade
   
   # find the current path with a package.json or .packages or cur_path
   def self.discover_root(cur_path)

@@ -1,5 +1,5 @@
 # ==========================================================================
-# Project:   Tiki - CommonJS Runtime
+# Project:   Spade - CommonJS Runtime
 # Copyright: ©2010 Strobe Inc. All rights reserved.
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
@@ -7,7 +7,7 @@
 require 'json'
 
 
-module Tiki
+module Spade
 
   def self.current_context
     @current_context
@@ -68,10 +68,10 @@ module Tiki
     end
     
     def load_ruby(id, rb_path)
-      old_context = Tiki.current_context 
-      Tiki.current_context = @ctx
+      old_context = Spade.current_context 
+      Spade.current_context = @ctx
       require rb_path
-      Tiki.current_context = old_context
+      Spade.current_context = old_context
       
       @ctx.eval("spade.register('#{id}', '');")
     end

@@ -1,5 +1,5 @@
 # ==========================================================================
-# Project:   Tiki - CommonJS Runtime
+# Project:   Spade - CommonJS Runtime
 # Copyright: ©2010 Strobe Inc. All rights reserved.
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
@@ -7,10 +7,10 @@
 require 'optparse'
 require 'ostruct'
 
-module Tiki
+module Spade
   module CLI
     def self.run(exename = 'spade', rootdir = nil, args = [])    
-      rootdir = Tiki.discover_root(rootdir) unless rootdir.nil?
+      rootdir = Spade.discover_root(rootdir) unless rootdir.nil?
         
       options = OpenStruct.new
       options.libs = []
@@ -34,7 +34,7 @@ module Tiki
       end
       
       if options.version_info
-        puts "The Ruby Racer #{V8::VERSION} w/ Tiki"
+        puts "The Ruby Racer #{V8::VERSION} w/ Spade"
         puts "V8 Version 2.3.3"
         exit
       elsif options.selftest
@@ -100,7 +100,7 @@ module Tiki
     def self.repl(cxt, exename)
       require 'readline'
       puts "help() for help. quit() to quit."
-      puts "The Ruby Racer #{V8::VERSION} with Tiki"
+      puts "The Ruby Racer #{V8::VERSION} with Spade"
       puts "Vroom Vroom!"      
       trap("SIGINT") do
         puts "^C"

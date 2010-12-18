@@ -1,16 +1,16 @@
 // ==========================================================================
-// Project:   Tiki - CommonJS Runtime
+// Project:   Spade - CommonJS Runtime
 // Copyright: ©2010 Strobe Inc. All rights reserved.
 // License:   Licened under MIT license (see __preamble__.js)
 // ==========================================================================
 
 var Ct = require('core-test/sync'),
-    Tiki = require('../lib/spade').Tiki;
+    Spade = require('../lib/spade').Spade;
 
 Ct.module('spade: packages');
 
 Ct.setup(function(t) {
-  t.spade = new Tiki(); 
+  t.spade = new Spade(); 
 });
 
 Ct.teardown(function(t) { 
