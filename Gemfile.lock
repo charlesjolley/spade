@@ -1,0 +1,10 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    therubyracer (0.8.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  therubyracer (= 0.8.0)
