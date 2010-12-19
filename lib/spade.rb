@@ -6,5 +6,13 @@
 
 require 'spade/loader'     
 require 'spade/context'
+
+module Spade
+  
+  VERSION = '0.0.1'
+  
+  SPADE_DIR = '.spade'
+
+end
       
   

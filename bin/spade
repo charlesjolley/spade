@@ -5,4 +5,4 @@ $:.unshift(lib) if File.exists?(lib)
 require 'spade'
 require 'spade/cli'
 
-Spade::CLI.run(File.basename(__FILE__), Dir.pwd, ARGV)
+Spade::CLI.start

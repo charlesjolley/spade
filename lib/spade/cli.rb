@@ -4,74 +4,143 @@
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
 
-require 'optparse'
-require 'ostruct'
+require 'thor'
+require 'spade/shell'
+require 'spade/bundle'
+
+EXENAME = 'spade'
 
 module Spade
-  module CLI
-    def self.run(exename = 'spade', rootdir = nil, args = [])    
-      rootdir = Spade.discover_root(rootdir) unless rootdir.nil?
-        
-      options = OpenStruct.new
-      options.libs = []
-      options.libdirs = []
-      parser = OptionParser.new
-      parser.banner = "Usage: #{exename} [options]"
-      parser.on("-r", "--require FILE", "load and execute FILE as JavaScript source") {|r| options.libs << r}
-      parser.on("-i", "--interactive", "interactive mode") {options.interactive = true}
-      parser.on("-e", "--execute JAVASCRIPT", String, "evaluate JAVASCRIPT and exit") {|src| options.execute = src}
-      parser.on("--selftest", "check that therubyracer is functioning properly") {options.selftest = true}
-      parser.on_tail("-v", "--version", "Show version and exit") {options.version_info = true}
-      parser.on_tail("-h", "--help", "Show this message") do
-        puts parser
-        exit
-      end
-      begin
-        extra_files = parser.parse!(args.dup)
-      rescue OptionParser::InvalidOption => e
-        puts "#{exename}: #{e.message}"
-        exit(1)
-      end
-      
-      if options.version_info
-        puts "The Ruby Racer #{V8::VERSION} w/ Spade"
-        puts "V8 Version 2.3.3"
-        exit
-      elsif options.selftest
-        self.test        
-      end
-      
-      Context.new(:rootdir => rootdir, :with => Shell.new) do |cxt|
-        for libfile in options.libs do
-          load(cxt,libfile)
-        end        
+  
+  class CLI < Thor
 
-        if options.interactive
-          repl(cxt, exename)
-        elsif options.execute
-          cxt.eval(options.execute, '<execute>')
-        elsif extra_files.size>0
-          extra_files.each { |path| load(cxt, path) }
-        else
+    default_task :exec
+    
+    class_option :working, :required => false, 
+      :default => Spade.discover_root(Dir.pwd), 
+      :aliases => ['-w'],
+      :desc    => 'Root working directory.'
+      
+    class_option :verbose, :type => :boolean, :default => false,
+      :aliases => ['-v'],
+      :desc => 'Show additional debug information while running'
+      
+    class_option :require, :type => :array, :required => false,
+      :aliases => ['-r'],
+      :desc => "optional JS files to require before invoking main command"
+
+    map  "-i" => "console", "--interactive" => "console"
+    desc "console", "Opens an interactive JavaScript console"
+    def console
+      
+      require 'readline'
+      
+      context(:with => Spade::Shell.new) do |ctx|
+        puts "help() for help. quit() to quit."
+        puts "Spade #{Spade::VERSION} (V8 #{V8::VERSION})"
+        puts "WORKING=#{options[:working]}" if options[:verbose]
+          
+        trap("SIGINT") { puts "^C" }        
+        loop do
+          line = Readline.readline("#{EXENAME}> ", true)
           begin
-            first_line = $stdin.readline
-            unless first_line =~ /^\#\!/ # allow for poundhash
-              cxt.eval(first_line, '<stdin>')
-            else
-              cxt.eval($stdin, '<stdin>')
-            end
-            
-          rescue Interrupt => e
-            puts; exit
+            result = ctx.eval(line, '<console>')
+            puts(result) unless result.nil?                
+          rescue V8::JSError => e
+            puts e.message
+            puts e.backtrace(:javascript)
+          rescue StandardError => e
+            puts e
+            puts e.backtrace.join("\n")
           end
         end
-      end
+        
+      end          
     end
+    
+    
+    map "-e" => "exec"
+    desc "exec [FILENAME]", "Executes filename or stdin"
+    def exec(filename=nil)
+      if filename
+        filename = File.expand_path filename, options[:working]
+        throw "#{filename} not found" unless File.exists?(filename)
+        fp = File.open filename
+        source = File.basename filename
+      else
+        fp = $stdin
+        source = '<stdin>'
+      end
 
-    def self.load(cxt, libfile)
+      begin
+        # allow for poundhash
+        first_line = fp.readline
+        context do |ctx|
+          ctx.eval(first_line, source) unless first_line =~ /^\#\!/   
+          ctx.eval(fp, source) # eval the rest
+        end
+        
+      rescue Interrupt => e
+        puts; exit
+      end
+      
+    end
+    
+    map "server" => "preview"
+    desc "preview", "Starts a preview server for testing"
+    long_desc %[
+      The preview command starts a simple file server that can be used to 
+      load JavaScript-based apps in the browser.  This is a convenient way to
+      run apps in the browser instead of having to setup Apache on your 
+      local machine.  If you are already loading apps through your own web
+      server (for ex using Rails) the preview server is not required.
+    ]
+    
+    method_option :port, :type => :string, :default => '4020',
+      :aliases => ['-p'],
+      :desc => 'Port number'
+      
+    def preview
+      require 'rack'
+      require 'rack/static'
+      
+      rootdir = Spade.discover_root options[:working]
+      static = Rack::Static.new(nil, :urls => ['/'], :root => rootdir)
+      static = Rack::ShowStatus.new(Rack::ShowExceptions.new(static))
+
+      trap("SIGINT") { Rack::Handler::WEBrick.shutdown }
+      Rack::Handler::WEBrick.run static, :Port => options[:port].to_i
+      
+    end
+    
+    
+    desc "update", "Update package info in the current project"
+    def update 
+      Bundle.update(options[:working], :verbose => options[:verbose])
+    end
+    
+    
+    protected 
+    
+      # Replace start such that if you don't pass an original task, we try to 
+      # treat the command as exec
+      def self.dispatch(meth, given_args, given_opts, config) #:nodoc:
+        saved_args = given_args.dup
+        begin
+          super(meth, given_args, given_opts, config)
+        rescue Thor::UndefinedTaskError => e
+          super('exec', saved_args, given_opts, config)
+        end
+      end
+    
+    private
+
+
+    # Loads a JS file into the context.  This is not a require; just load
+    def load(cxt, libfile)
       begin
         content = File.readlines(libfile)
-        content.shift if (content.first||'' =~ /^\#\!/)
+        content.shift if content.first && (content.first =~ /^\#\!/)
         cxt.eval(content*'')
         #cxt.load(libfile)
       rescue V8::JSError => e
@@ -81,73 +150,20 @@ module Spade
         puts e
       end
     end
-    
-    def self.test
-      begin
-        require 'rubygems'
-        require 'rspec'
-        ARGV.clear
-        ARGV << File.dirname(__FILE__) + '/../../spec/'
-        ::RSpec::Core::Runner.autorun
-        exit(0)
-      rescue LoadError => e
-        puts "selftest requires rspec to be installed (gem install rspec)"
-        exit(1)
-      end
-      
-    end
 
-    def self.repl(cxt, exename)
-      require 'readline'
-      puts "help() for help. quit() to quit."
-      puts "The Ruby Racer #{V8::VERSION} with Spade"
-      puts "Vroom Vroom!"      
-      trap("SIGINT") do
-        puts "^C"
-      end        
-      loop do
-        line = Readline.readline("#{exename}> ", true)
-        begin
-          result = cxt.eval(line, '<shell>')
-          puts(result) unless result.nil?                
-        rescue V8::JSError => e
-          puts e.message
-          puts e.backtrace(:javascript)
-        rescue StandardError => e
-          puts e
-          puts e.backtrace.join("\n")
-        end
-      end          
-    end            
-    
-    class Shell
-      def to_s
-        "[object Shell]"
-      end
+    # Initialize a context to work against.  This will load also handle 
+    # autorequires
+    def context(opts={})
+      opts[:rootdir] ||= options[:working]
+      Context.new(opts) do |ctx|
 
-      def print(string)
-        puts string
-      end
-
-      def exit(status = 0)
-        Kernel.exit(status)
-      end
-          
-      alias_method :quit, :exit
-      
-      def help(*args)
-        <<-HELP
-    print(msg)
-      print msg to STDOUT    
+        requires = opts[:require]
+        requires.each { |r| load(ctx, r) } if requires
         
-    exit(status = 0)
-      exit the shell
-      also: quit()
-          
-    evalrb(source)
-      evaluate some ruby source
-    HELP
+        yield(ctx) if block_given?
       end
     end
+    
   end
+  
 end
