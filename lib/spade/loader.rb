@@ -103,7 +103,7 @@ module Spade
       # package_paths.each { |path| add_package(path) }      
       
       # in reverse order of precedence
-      %w[spade/packages vendor/cache vendor/packages packages].each do |p|
+      %w[.spade/packages vendor/cache vendor/packages packages].each do |p|
         package_paths = Dir.glob File.join(@ctx.rootdir, p.split('/'), '*')
         package_paths.each { |path| add_package(path) }
       end
