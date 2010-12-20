@@ -3,63 +3,115 @@
  Copyright: ©2010 Strobe Inc.
  ===========================================================================`
 
-Spade is a package-aware module microkernel for both the browser and the 
-command line.  It is a very simple loader that is < 4K when built (around 1K 
-gzipped).  
+Spade makes it easy to share and run JavaScript in both the browser and on the
+command line.
 
-# CommonJS Support
+# Quick Start
 
-Spade implements support for the CommonJS Modules 1.1 specification with a few
-optional modifications:
+## From the Command Line
 
-    *   Globals.  Spade permits modules to add objects to the global namespace.
-        Depending on the Sandbox you use the globals can be isolated within
-        a single set of module instances.
-        
-    *   Packages.  Spade allows you to break modules into separate bundles of 
-        modules called 'packages'.  Packages are namespaced so you can work
-        with a set of modules within a single package as well as importing 
-        modules across packages.
-        
-    *   String Modules.  You can register module body as a string that will
-        be eval'd on demand the first time the module is requested.  This is 
-        an important performance enhancement for mobile devices.
-        
-# Using Spade
+Let's write a simple 'hello-world' script.  Create a new file called 'main.js'
+and put in the following:
 
-The easiest way to use Spade is as part of the abbot build tools.  You can also
-simply load the spade.js file in the lib directory in your HTML file.  Once 
-loaded, additional files you load should register modules and packages for 
-your code to use.
+    require('console');
+    console.log('Hello World');
+  
+Now run this from the command line:
 
-To register a module you should use the registration API:
+    spade main.js
+  
+This will run the main.js file.  The package you loaded ('console') is a 
+built-in package included with spade.
 
-    spade.register('package/module', function() { ... });
+Now we want to run this in the browser.  To run in the browser, you need to 
+make a JavaScript _package_.  A package is simply a folder containing your 
+JavaScript structured in a way that the module system can understand.  All
+shared libraries that you load (such as 'console') are also packages.
+
+## From the Browser
+
+To make the hello-world app package, create a folder called 'hello-world'.  
+Inside of that, create a folder called 'lib' and put your main.js in there.
+You should also create index.html and package.json files.  The folder 
+structure should look like this:
+
+    /hello-world
+      index.html
+      package.json
+      /lib
+        main.js <-- your previous main.js file
+
+Your index.html should contain the following:
+
+    <html>
+      <head>
+        <script src="spade-boot.js" spade-require="main"></script>
+      </head>
+      <body>
+      </body>
+    </html>
     
-You can now require a module using:
+This index.html file will simply load a boot script that we are about to 
+generate.
 
-    exports = spade.require('package/module');
+The package.json should list at minimum the app name and dependencies:
+
+    {
+      "name": "hello-world",
+      "version": "0.0.1",
+      "dependencies": {
+        "console": "1.0.0"
+      }
+    }
     
-Note that the top level term in a module is always the name of the package.
+Next, we need to setup this package so it includes any dependencies.  To do 
+this, use the `spade update` command:
 
-Within modules, you will be passed a private require function to use instead.
-
-    require('package/module'); // not required to name package
-
-In addition to modules, you can register package info with the same methods:
-
-    spade.register('package', { ... });
+    spade update
     
-The second param should be a JSON hash that contains any relevant keys about
-the package.  Spade knows how to look at the mappings hash to map symbolic 
-package names to actual packages.  Otherwise this package info is really only 
-used when you want it.  The package info is passed in the module.packageInfo 
-property.
+This will create a new, hidden '.spade' directory with info along with a new
+file called spade-boot.js.  This contains the bootstrap needed to get your 
+modules loading in the browser.
 
-You can also lazy load packages but registering externs:
+Finally, to load in the browser, you will need to access your files through a server.  You could use Apache or Rails, but spade comes with a built-in preview as well (which currently is just a static file server).  Start the 
+preview server with:
 
-    spade.extern({ 'package-name': 'URL' });
+    spade preview
     
-You can now async load packages and Spade will automatically load the package
-from the URL.
+Then visit http://localhost:4020/index.html
+
+If you open the JavaScript console you should see `Hello World` printed out.
+
+Note that you can still run main.js from the command line:
+
+    spade lib/main.js
+
+## From the Console
+
+Now that you have a package setup you can also easily use the interactive
+console that comes with spade.  When you drop into the console you can load
+modules from your project onto the command line.
+
+    spade console
+    
+From within the console, load your main hello-world module to see it log:
+
+    require('hello-world/main');
+    
+You should see it log 'Hello World'.
+
+# Defining Packages
+
+In addition to creating packages as apps, as we did above.  You can also 
+define shared package libraries.  
+
+TODO: Finish this...
+
+## Ruby Modules
+
+Drop a ruby file into a package and then you can require it.  The Ruby should
+set the Spade.exports to a new instance of a class to make it into the exports
+for the class.  
+
+Note that Ruby modules only work when code is run from the command line.
 
