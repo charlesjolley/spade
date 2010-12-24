@@ -30,6 +30,9 @@ module Spade
     def initialize(opts={})
       @rootdir = opts[:rootdir] || opts['rootdir']
       super(opts) do |ctx|
+        ctx['ENV'] = opts[:env] || ENV
+        ctx['ARGV'] = opts[:argv] || ARGV
+        
         ctx.load(TIKIJS_PATH)
         ctx['rubyLoader'] = Loader.new(self)
         ctx.eval 'spade.loader = rubyLoader;'
