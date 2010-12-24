@@ -51,6 +51,12 @@ module Spade
         dirname = 'lib' if dirname.nil?
       end
       
+      # register the package first
+      unless package_info[:registered]
+        package_info[:registered] = true
+        @ctx.eval "spade.register('#{package_name}', #{package_info[:json].to_json});"
+      end
+      
       filename = parts.pop
       js_path = File.join(package_info[:path], dirname, parts, filename+'.js')
       rb_path = File.join(package_info[:path], dirname, parts, filename+'.rb')
@@ -87,7 +93,7 @@ module Spade
       
       @ctx.eval(%[(function() { 
         var exp = $__rb_exports__; 
-        spade.register('#{id}', function(r,m,e) { m.exports = exp; }); 
+        spade.register('#{id}', function(r,e,m) { m.exports = exp; }); 
       })();])
       
       @ctx['$__rb_exports__'] = nil
@@ -122,9 +128,15 @@ module Spade
 
       json = JSON.load(File.read(json_package)) rescue nil
       return if json.nil?
-      
+
       directories = json["directories"] || { "lib" => "lib" }
-      @packages[json["name"]] = { :path => path, :directories => directories }
+      @packages[json["name"]] = { 
+        :registered => false,
+        :path => path, 
+        :directories => directories,
+        :json => json 
+      }
+      
     end
     
   end
