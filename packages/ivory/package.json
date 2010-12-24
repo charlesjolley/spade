@@ -1,0 +1,5 @@
+{
+  "name": "ivory",
+  "version": "0.0.1",
+  "description": "Partial implementation of the node.js APIs built on top of spade"
+}
