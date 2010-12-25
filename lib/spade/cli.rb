@@ -61,21 +61,30 @@ module Spade
     
     map "-e" => "exec"
     desc "exec [FILENAME]", "Executes filename or stdin"
-    def exec(filename=nil)
+    
+    def exec(*exec_args)
+      
+      filename = exec_args.shift
+      exec_args = ARGV.dup
+      exec_args.shift if exec_args.first == 'exec' # drop exec name
+      exec_args.shift # drop exec name
+      
       if filename
         filename = File.expand_path filename, options[:working]
         throw "#{filename} not found" unless File.exists?(filename)
-        fp = File.open filename
-        source = File.basename filename
+        fp      = File.open filename
+        source  = File.basename filename
+        rootdir = Spade.discover_root filename
       else
         fp = $stdin
         source = '<stdin>'
+        rootdir = options[:working]
       end
 
       begin
         # allow for poundhash
         first_line = fp.readline
-        context do |ctx|
+        context(:argv => exec_args, :rootdir => rootdir) do |ctx|
           ctx.eval(first_line, source) unless first_line =~ /^\#\!/   
           ctx.eval(fp, source) # eval the rest
         end
