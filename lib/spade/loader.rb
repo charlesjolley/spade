@@ -31,8 +31,29 @@ module Spade
       @ctx = ctx
     end
     
+    def discoverRoot(path)
+      Spade.discover_root path
+    end
+    
+    def root(path=nil)
+      return @ctx.rootdir if path.nil?
+      @ctx.rootdir = path 
+      @packages = nil
+    end
+    
     # exposed to JS.  Find the JS file on disk and register the module
     def loadFactory(spade, id, done=nil)
+      
+      # load individual files
+      if id =~ /^\(file\)\//
+        js_path = id[6..-1]
+        if File.exists? js_path
+          load_module id, js_path
+        end
+        return nil
+      end
+
+      
       parts = id.split '/'
       package_name = parts.shift
       package_info = packages[package_name]
