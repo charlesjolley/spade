@@ -24,13 +24,13 @@ module Spade
   
   class Context < V8::Context
 
-    attr_reader :rootdir
+    attr_accessor :rootdir
     
     # Load the spade and racer-loader.
-    def initialize(opts={})
+    def initialize(opts={})      
       @rootdir = opts[:rootdir] || opts['rootdir']
       super(opts) do |ctx|
-        ctx['ENV'] = opts[:env] || ENV
+        ctx['ENV'] = (opts[:env] || ENV).to_hash
         ctx['ARGV'] = opts[:argv] || ARGV
         
         ctx.load(TIKIJS_PATH)
