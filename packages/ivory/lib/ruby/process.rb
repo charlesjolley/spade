@@ -20,6 +20,10 @@ module Ivory
       Dir.pwd
     end
     
+    def exit(status)
+      Kernel.exit status
+    end
+    
     # TODO: Make this a real event emitter at some point?
     def EventEmitter
       @event_emitter ||= @ctx.eval('(function(){})')
