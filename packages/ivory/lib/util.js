@@ -21,17 +21,17 @@ exports.puts = function() {
   }
 };
 
+exports.println = exports.puts;
 
 exports.debug = function(x) {
-  process.binding('stdio').writeError('DEBUG: ' + x + '\n');
+  console.debug(x);
 };
 
 
-var error = exports.error = function(x) {
-  for (var i = 0, len = arguments.length; i < len; ++i) {
-    process.binding('stdio').writeError(arguments[i] + '\n');
-  }
+exports.error = function(x) {
+  console.error(x);
 };
+var error = exports.error;
 
 
 /**

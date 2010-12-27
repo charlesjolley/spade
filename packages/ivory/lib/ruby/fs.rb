@@ -4,6 +4,7 @@
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
 
+require 'fileutils'
 require File.join(File.dirname(__FILE__), 'namespace')
 
 module Ivory
@@ -147,6 +148,12 @@ module Ivory
     def mkdir(name, mode, callback = nil)
       async(callback) do
         Dir.mkdir(name)
+      end
+    end
+
+    def mkdir_p(name, mode, callback = nil)
+      async(callback) do
+        FileUtils.mkdir_p(name, mode)
       end
     end
 

@@ -1,3 +1,9 @@
+# ==========================================================================
+# Project:   Ivory
+# Copyright: ©2010 Strobe Inc. All rights reserved.
+# License:   Licened under MIT license (see LICENSE)
+# ==========================================================================
+
 module Ivory
 
   module Namespace

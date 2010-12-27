@@ -5,13 +5,12 @@
 // ==========================================================================
 
 // borrows from node.js
-var process = require('./ruby/process');
 var Buffer  = require('./buffer').Buffer;
 
 var util = require('./util');
 
-var binding = process.binding('fs');
-var constants = process.binding('constants');
+var binding = require('./ruby/fs');
+var constants = require('./ruby/constants');
 var fs = exports;
 
 for(var key in constants) fs[key] = constants[key];
@@ -137,12 +136,23 @@ fs.mkdir = function(path, mode, callback) {
   return binding.mkdir(path, mode, callback);
 };
 
+fs.mkdir_p = function(path, mode, callback) {
+  return binding.mkdir_p(path, mode, callback);
+};
+
 fs.sendfile = function(outFd, inFd, inOffset, length, callback) {
   return binding.sendfile(outFd, inFd, inOffset, length, callback);
 };
 
 fs.readdir = function(path, callback) {
   return binding.readdir(path, callback);
+};
+
+fs.readdir_p = function(path, callback) {
+  if (!fs.exists(path)) {
+    if (callback) callback(null, []);
+    else return [];
+  } else return fs.readdir(path, callback);
 };
 
 fs.fstat = function(fd, callback) {

@@ -4,9 +4,8 @@
 // License:   Licened under MIT license
 // ==========================================================================
 
-var process = require('./ruby/process');
-
-var EventEmitter = exports.EventEmitter = process.EventEmitter;
+var EventEmitter = require('./ruby/events').EventEmitter;
+exports.EventEmitter = EventEmitter;
 
 var isArray = Array.isArray;
 

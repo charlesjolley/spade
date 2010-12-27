@@ -1,8 +1,10 @@
-# Ivory - A node/commonjs runtime
+# Ivory - A basic filesystem 
 
-This package implements the node.js/commonjs APIs for performing local 
-operations.  It currently runs only from the spade CLI but it can also be 
-adapted to run in the node.js and browser environments as well.
+Ivory is a basic filesystem API for JS.  It is based mostly on the node.js 
+API but internally uses a ruby binding for use with the spade runtime.
+
+Currently Ivory is considered unstable.  The API can change at any time.  In
+general we try to keep it close to node.js.
 
 ## Usage
 

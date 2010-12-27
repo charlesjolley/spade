@@ -8,8 +8,9 @@ require File.join(File.dirname(__FILE__), 'namespace')
 require 'v8'
 
 module Ivory
-  class Buffer
+  class BufferModule
     include Namespace
+    
     class SlowBuffer
       attr_reader :data
       protected :data
@@ -142,5 +143,5 @@ module Ivory
   end
 end
 
-Spade.exports = Ivory::Buffer.new
+Spade.exports = Ivory::BufferModule.new
 
