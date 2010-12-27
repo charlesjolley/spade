@@ -4,23 +4,21 @@
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
 
-
-# Borrowed from RubyRacer
+# Global object used for the shell.
 module Spade
   
   class Shell
+    
+    attr_accessor :ctx
+    
     def to_s
       "[object Shell]"
     end
 
-    def print(string)
-      puts string
+    def exit(status=0)
+      ctx.reactor.exit(status)
     end
-
-    def exit(status = 0)
-      Kernel.exit(status)
-    end
-        
+    
     alias_method :quit, :exit
     
     def help(*args)

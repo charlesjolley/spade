@@ -35,25 +35,15 @@ module Spade
       
       require 'readline'
       
-      context(:with => Spade::Shell.new) do |ctx|
+      shell = Spade::Shell.new
+      context(:with => shell) do |ctx|
+        shell.ctx = ctx
         puts "help() for help. quit() to quit."
         puts "Spade #{Spade::VERSION} (V8 #{V8::VERSION})"
         puts "WORKING=#{options[:working]}" if options[:verbose]
           
-        trap("SIGINT") { puts "^C" }        
-        loop do
-          line = Readline.readline("#{EXENAME}> ", true)
-          begin
-            result = ctx.eval(line, '<console>')
-            puts(result) unless result.nil?                
-          rescue V8::JSError => e
-            puts e.message
-            puts e.backtrace(:javascript)
-          rescue StandardError => e
-            puts e
-            puts e.backtrace.join("\n")
-          end
-        end
+        trap("SIGINT") { puts "^C" }
+        repl ctx     
         
       end          
     end
@@ -144,6 +134,22 @@ module Spade
     
     private
 
+    def repl(ctx)
+      ctx.reactor.next_tick do
+        line = Readline.readline("#{EXENAME}> ", true)
+        begin
+          result = ctx.eval(line, '<console>')
+          puts result unless result.nil?                
+        rescue V8::JSError => e
+          puts e.message
+          puts e.backtrace(:javascript)
+        rescue StandardError => e
+          puts e
+          puts e.backtrace.join("\n")
+        end
+        repl(ctx)
+      end
+    end
 
     # Loads a JS file into the context.  This is not a require; just load
     def load(cxt, libfile)
@@ -164,7 +170,7 @@ module Spade
     # autorequires
     def context(opts={})
       opts[:rootdir] ||= options[:working]
-      Context.new(opts) do |ctx|
+      MainContext.new(opts) do |ctx|
 
         requires = opts[:require]
         requires.each { |r| load(ctx, r) } if requires
