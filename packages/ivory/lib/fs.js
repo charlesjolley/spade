@@ -15,6 +15,9 @@ var fs = exports;
 
 for(var key in constants) fs[key] = constants[key];
 
+fs.STDIN = binding.stdin;
+fs.STDOUT = binding.stdout;
+
 fs.Stats = binding.Stats;
 
 fs.Stats.prototype._checkModeProperty = function(property) {

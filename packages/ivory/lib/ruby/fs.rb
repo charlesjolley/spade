@@ -21,6 +21,14 @@ module Ivory
       end
     end
 
+    def stdin
+      $stdin
+    end
+    
+    def stdout
+      $stdout
+    end
+    
     def readFile(path, encoding, callback = nil)
       async(callback) do
         File.read(path)
@@ -29,9 +37,7 @@ module Ivory
     
     def writeFile(path, data, encoding, callback=nil)
       async(callback) do
-        File.open(path, 'w+') do |fd|
-          fd.write(data);
-        end
+        File.open(path, 'w+') { |fd| fd.write(data); }
       end
     end
     
@@ -64,7 +70,6 @@ module Ivory
     end
 
     def read(fd, buffer, offset, length, position, callback = nil)
-      #raise "Second argument needs to be a buffer" unless buffer.kind_of?(Buffer::SlowBuffer)
       raise "Offset is out of bounds" unless offset <= buffer.length
       raise "Length is extends beyond buffer" unless (offset + length) <= buffer.length
       async(callback) do
