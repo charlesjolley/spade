@@ -24,8 +24,14 @@ module Spade
 
       FileUtils.ln_s BOOT_PATH, File.join(spade_path, 'boot')
       
+      installed = []
+      
       Dir.glob(File.join(BUILTIN_PACKAGES, '*')).each do |path|
         next unless File.exists? File.join(path, 'package.json')
+
+        next if installed.include? path
+        installed << path
+        
         new_path = File.join(spade_path, 'packages', File.basename(path))
         FileUtils.ln_s path, new_path, :force => true
         puts "Installing built-in package #{File.basename(path)}" if verbose
@@ -33,6 +39,10 @@ module Spade
       
       Dir.glob(File.join(rootdir, 'packages', '*')).each do |path|
         next unless File.exists? File.join(path, 'package.json')
+        
+        next if installed.include? path
+        installed << path
+        
         package_name = File.basename(path)
         old_path = File.join('..','..','packages', package_name)
         new_path = File.join(spade_path, 'packages', File.basename(path))
