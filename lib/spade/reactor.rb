@@ -145,7 +145,7 @@ module Spade
       end
 
       def cancel
-        @timer.cancel if @timer
+        EventMachine.cancel_timer(@timer) if @timer
         @timer = nil
         @reactor.remove_timer(self)
       end    
