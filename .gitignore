@@ -3,3 +3,6 @@ tmp
 *.gem
 spade-boot.js
 .spade
+examples/web-app/spade-boot.js
+examples/web-app/tests/ct-runner.js
+examples/web-app/.spade
