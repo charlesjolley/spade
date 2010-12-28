@@ -5,7 +5,7 @@
 // ==========================================================================
 
 var Ct = require('core-test/sync'),
-    Spade = require('../lib/spade').Spade;
+    Spade = require('spade').Spade;
 
 // ..........................................................
 // BASIC REQUIRE
@@ -15,9 +15,9 @@ Ct.module('spade: basic require');
 
 Ct.setup(function(t) {
   t.spade = new Spade(); 
-  
+    
   // preload a module
-  t.spade.register('foo', function(r,m,e) { e.id = 'foo'; });
+  t.spade.register('foo/main', function(r, e) { e.id = 'foo'; });
   
   // dummy loader loads only foo/bar on demand
   t.spade.loader = {
@@ -26,8 +26,8 @@ Ct.setup(function(t) {
     
     loadFactory: function(spade, id, done) {
       this.requests++;
-      if (id === '(default):foo/bar') {
-        spade.register(id, function(r,m,e) { e.id='foo/bar'; });
+      if (id === 'foo/bar') {
+        spade.register(id, function(r,e) { e.id='foo/bar'; });
       }
       if (done) throw "should not be passed done"
     }

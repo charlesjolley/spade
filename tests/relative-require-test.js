@@ -5,7 +5,7 @@
 // ==========================================================================
 
 var Ct = require('core-test/sync'),
-    Spade = require('../lib/spade').Spade;
+    Spade = require('spade').Spade;
 
 // ..........................................................
 // BASIC REQUIRE
@@ -16,9 +16,13 @@ Ct.module('spade: relative require');
 Ct.setup(function(t) {
   t.spade = new Spade(); 
   
+  ['foo', 'bar'].forEach(function(id) {
+    t.spade.register(id, { "name": id });
+  });
+  
   // register some dummy modules.  These will just set an 'id' prop on exports
-  ['foo/bar', 'bar', 'foo/bar/baz'].forEach(function(id) {
-    t.spade.register(id, function(r,m,e) { e.id = id; });
+  ['foo/bar', 'bar/main', 'foo/bar/baz'].forEach(function(id) {
+    t.spade.register(id, function(r, e) { e.id = id; });
   });
   
 });
@@ -29,7 +33,7 @@ Ct.teardown(function(t) {
 
 Ct.test('require absolute', function(t) {
   var spade = t.spade;
-  spade.register('blah', function(require, m, e) { 
+  spade.register('blah', function(require, e) { 
     e.found = require('foo/bar').id; 
   });
   
@@ -38,16 +42,16 @@ Ct.test('require absolute', function(t) {
 
 Ct.test('require relative top level', function(t) {
   var spade = t.spade;
-  spade.register('blah', function(require, m, e) { 
-    e.found = require('./bar').id; 
+  spade.register('blah/main', function(require, e) { 
+    e.found = require('../bar').id; 
   });
   
-  t.equal(spade.require('blah').found, 'bar');
+  t.equal(spade.require('blah').found, 'bar/main');
 });
 
 Ct.test('require relative nested', function(t) {
   var spade = t.spade;
-  spade.register('foo/blah', function(require, m, e) { 
+  spade.register('foo/blah', function(require, e) { 
     e.found = require('./bar').id; 
   });
   
@@ -56,7 +60,7 @@ Ct.test('require relative nested', function(t) {
 
 Ct.test('require relative  up nested', function(t) {
   var spade = t.spade;
-  spade.register('bar/blah', function(require, m, e) { 
+  spade.register('bar/blah', function(require, e) { 
     e.found = require('../foo/bar/baz').id; 
   });
   

@@ -5,7 +5,7 @@
 // ==========================================================================
 
 var Ct = require('core-test/sync'),
-    Spade = require('../lib/spade').Spade;
+    Spade = require('spade').Spade;
 
 Ct.module('spade: packages');
 
@@ -22,9 +22,8 @@ Ct.test('should find registered package', function(t) {
   var spade = t.spade;
   spade.register('PKG', { name: 'PKG' });
   
-  t.equal(spade.packageFor('PKG').name, 'PKG');
-  t.equal(spade.packageFor('PKG:foo/bar').name, 'PKG');
-  
+  t.equal(spade.package('PKG').name, 'PKG');
+  t.equal(spade.package('PKG/foo/bar').name, 'PKG');
   
 });
 
@@ -33,15 +32,13 @@ Ct.test('should respect mappings', function(t) {
   var spade = t.spade;
   spade.register('PKG', { mappings: { foo: 'FOO' } });
   
-  spade.register('PKG:bar', function(require, module, exports) {
-    exports.id = require('foo:foo').id;
+  spade.register('PKG/bar', function(require, exports) {
+    exports.id = require('foo/foo').id;
   });
   
-  spade.register('FOO:foo', function(r, m, e) { e.id = 'FOO'; });
+  spade.register('FOO/foo', function(r, e) { e.id = 'FOO'; });
   
-  t.equal(spade.require('PKG:bar').id, 'FOO'); // should remap pkg name
+  t.equal(spade.require('PKG/bar').id, 'FOO'); // should remap pkg name
   
 });
 
-
-Ct.run();

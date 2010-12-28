@@ -3,9 +3,11 @@
 // Copyright: ©2010 Strobe Inc. All rights reserved.
 // License:   Licened under MIT license (see __preamble__.js)
 // ==========================================================================
+/*globals Ct */
 
-var Ct = require('core-test'),
-    Spade = require('../lib/spade').Spade;
+require('core-test');
+
+var Spade = require('spade').Spade;
 
 // ..........................................................
 // BASIC REQUIRE
@@ -17,7 +19,7 @@ Ct.setup(function(t, done) {
   t.spade = new Spade(); 
   
   // preload a module
-  t.spade.register('foo/baz', function(require,m,e) { 
+  t.spade.register('foo/baz', function(require,e) { 
     e.id = 'foo/baz'; 
     e.async = require.async; // export for testing
   });
@@ -29,9 +31,9 @@ Ct.setup(function(t, done) {
     
     loadFactory: function(spade, id, done) {
       this.requests++;
-      if (id === '(default):foo/bar') {
+      if (id === 'foo/bar') {
         setTimeout(function() {
-          spade.register(id, function(r,m,e) { e.id='foo/bar'; });
+          spade.register(id, function(r,e) { e.id='foo/bar'; });
           done();
         }, 10);
 
@@ -119,6 +121,3 @@ Ct.test('should return err if loader does not register', function(t, done) {
   
 });
 
-
-
-Ct.run();

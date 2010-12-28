@@ -5,7 +5,7 @@
 // ==========================================================================
 
 var Ct = require('core-test/sync'),
-    Spade = require('../lib/spade').Spade;
+    Spade = require('spade').Spade;
 
 // ..........................................................
 // BASIC REQUIRE
@@ -25,7 +25,7 @@ Ct.teardown(function(t) {
 Ct.test('register then require a module', function(t) {
   var spade = t.spade;
   
-  spade.register('foo/bar', function(require, module, exports) { 
+  spade.register('foo/bar', function(require, exports) { 
     exports.foo = 'bar';
   });
   
@@ -54,6 +54,3 @@ Ct.test('require a module that was just registered symbolically.  This is for co
   spade.register('not/a-module');
   t.ok(spade.require('not/a-module'));
 });
-
-
-Ct.run();
