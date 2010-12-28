@@ -60,11 +60,20 @@ module Spade
       exec_args.shift # drop exec name
       
       if filename
-        filename = File.expand_path filename, options[:working]
+        puts options[:working]
+        filename = File.expand_path filename, Dir.pwd
         throw "#{filename} not found" unless File.exists?(filename)
         fp      = File.open filename
         source  = File.basename filename
         rootdir = Spade.discover_root filename
+        
+        # peek at first line.  If it is poundhash, skip. else reopen file
+        unless fp.readline =~ /^\#\!/
+          fp.close
+          fp = File.open filename
+        end
+          
+        
       else
         fp = $stdin
         source = '<stdin>'
@@ -73,9 +82,7 @@ module Spade
 
       begin
         # allow for poundhash
-        first_line = fp.readline
         context(:argv => exec_args, :rootdir => rootdir) do |ctx|
-          ctx.eval(first_line, source) unless first_line =~ /^\#\!/   
           ctx.eval(fp, source) # eval the rest
         end
         
