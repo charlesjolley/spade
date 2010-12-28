@@ -94,7 +94,7 @@ module Spade
     var main = null;
     var scripts = document.scripts, len = scripts.length;
     for(var idx=0;!main && idx<len;idx++) {
-      main = scripts[idx].getAttribute('spade-require');
+      main = scripts[idx].getAttribute('data-require');
     }
     scripts = null; // avoid memory leaks in IE
 
