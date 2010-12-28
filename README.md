@@ -6,27 +6,36 @@
 Spade makes it easy to share and run JavaScript in both the browser and on the
 command line.
 
-# Quick Start
+# Setup
+
+The following commands will get you started on spade with an initial set of
+packages:
+
+    git clone git://github.com/charlesjolley/spade.git
+    cd spade
+    git submodule update --init
+    bundle install
+    
+You should now be able to run the demos in the examples folder.  Be sure to 
+check out any README files in the example folders for instructions there.
+
+# Quick Start Guide
 
 ## From the Command Line
 
-Let's write a simple 'hello-world' script.  Create a new file called 'main.js'
-and put in the following:
+Let's write a simple script.  Create a new file called 'main.js' and put in 
+the following:
 
-    require('console');
     console.log('Hello World');
   
 Now run this from the command line:
 
     spade main.js
   
-This will run the main.js file.  The package you loaded ('console') is a 
-built-in package included with spade.
-
 Now we want to run this in the browser.  To run in the browser, you need to 
 make a JavaScript _package_.  A package is simply a folder containing your 
 JavaScript structured in a way that the module system can understand.  All
-shared libraries that you load (such as 'console') are also packages.
+shared libraries that you load are also packages.
 
 ## From the Browser
 
@@ -45,7 +54,7 @@ Your index.html should contain the following:
 
     <html>
       <head>
-        <script src="spade-boot.js" spade-require="main"></script>
+        <script src="spade-boot.js" spade-require="hello-world"></script>
       </head>
       <body>
       </body>
@@ -57,11 +66,7 @@ generate.
 The package.json should list at minimum the app name and dependencies:
 
     {
-      "name": "hello-world",
-      "version": "0.0.1",
-      "dependencies": {
-        "console": "1.0.0"
-      }
+      "name": "hello-world"
     }
     
 Next, we need to setup this package so it includes any dependencies.  To do 
