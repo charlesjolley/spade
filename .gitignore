@@ -6,3 +6,4 @@ spade-boot.js
 examples/web-app/spade-boot.js
 examples/web-app/tests/ct-runner.js
 examples/web-app/.spade
+tests/ct-runner.js
