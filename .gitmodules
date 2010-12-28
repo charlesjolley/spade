@@ -3,7 +3,10 @@
 	url = https://github.com/jfd/optparse-js.git
 [submodule "packages/core-test"]
 	path = packages/core-test
-	url = git@github.com:charlesjolley/core_test.git
+	url = https://github.com/charlesjolley/core_test.git
 [submodule "packages/handlebars"]
 	path = packages/handlebars
 	url = https://github.com/wycats/handlebars.js.git
+[submodule "packages/coffee-script"]
+	path = packages/coffee-script
+	url = https://github.com/charlesjolley/coffee-script.git
