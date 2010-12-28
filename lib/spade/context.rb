@@ -41,6 +41,8 @@ module Spade
               platform: "#{RUBY_PLATFORM}",
               userAgent: 'spade #{Spade::VERSION}; #{RUBY_PLATFORM}'
             }
+            
+            exit = function(status) { return r.exit(status || 0); };
           })();
         ]
 
@@ -78,7 +80,9 @@ module Spade
           spade.defaultSandbox.rootdir = #{@rootdir.to_json};
           require = function(id) { return spade.require(id); };
           require.async = function(id, c) { return spade.async(id, c); };
+          require.sandbox = function(n, i) { return spade.sandbox(n,i); };
         ]
+
         ctx['rubyLoader'] = ctx['rubyCompiler'] = nil
         
         @reactor.start do
