@@ -1,0 +1,6 @@
+{
+  "name": "web-app",
+  "dependencies": { 
+    "jquery": "1.4.3"
+  }
+}
