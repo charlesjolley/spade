@@ -27,6 +27,14 @@ module Ivory
       end
     end
     
+    def writeFile(path, data, encoding, callback=nil)
+      async(callback) do
+        File.open(path, 'w+') do |fd|
+          fd.write(data);
+        end
+      end
+    end
+    
     def chmod(path, mode, callback = nil)
       async(callback) do
         File.chmod(mode, path)
