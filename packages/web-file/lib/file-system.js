@@ -225,4 +225,4 @@ function createFileSystem(root, cwd, readOnly) {
 }
 
 exports.FileSystem = FileSystem;
-exports.fileSystem = createFileSystem('/Users/charles', nat.cwd, false);
+exports.fileSystem = createFileSystem('/', nat.cwd, false);
