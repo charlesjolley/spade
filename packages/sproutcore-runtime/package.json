@@ -1,0 +1,8 @@
+{
+  "name": "sproutcore-runtime",
+  "version": "1.5",
+  
+  "dependencies": {
+    "jquery": "1.4.3"
+  }
+}
