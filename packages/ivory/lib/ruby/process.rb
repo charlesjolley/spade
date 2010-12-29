@@ -7,6 +7,10 @@
 module Ivory
   
   class Process
+
+    def initialize(ctx=nil)
+      @ctx = ctx
+    end
     
     # *args req to make this appear as a func
     def cwd(*args)
@@ -21,4 +25,4 @@ module Ivory
   
 end
 
-Spade.exports = Ivory::Process.new(Spade.current_context)
+Spade.exports = Ivory::Process

@@ -17,13 +17,25 @@ module Spade
     @current_context = ctx
   end
   
-  def self.exports
-    @exports
+  def self.exports=(klass)
+    exports(klass, nil)
   end
   
-  def self.exports=(exports)
-    @exports = exports
+  def self.exports(klass, path = nil)
+    path = @current_path if path.nil?
+    @exports ||= {}
+    @exports[path] = klass
   end
+  
+  def self.exports_for(path)
+    @current_path = path
+    require path
+    @current_path = nil
+    
+    @exports ||= {}
+    @exports[path]
+  end
+    
   
   class Loader
     
@@ -100,17 +112,10 @@ module Spade
     end
     
     def load_ruby(id, rb_path)
-      old_context = Spade.current_context 
-      old_exports = Spade.exports
-      
-      Spade.current_context = @ctx
-      Spade.exports = {}
-      require rb_path
 
-      @ctx['$__rb_exports__'] = Spade.exports || {}
-      
-      Spade.current_context = old_context
-      Spade.exports = old_exports
+      klass = Spade.exports_for rb_path
+      exports = klass.nil? ? {} : klass.new(@ctx)
+      @ctx['$__rb_exports__'] = exports
       
       @ctx.eval(%[(function() { 
         var exp = $__rb_exports__; 

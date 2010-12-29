@@ -9,6 +9,7 @@ require 'eventmachine'
 require 'v8'
 
 require 'spade/context'
+require 'spade/exports'
 
 module Spade
   

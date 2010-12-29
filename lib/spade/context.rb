@@ -22,6 +22,10 @@ module Spade
 
     attr_reader :reactor 
     
+    def require(mod_name)
+      self.eval("require('#{mod_name}');");
+    end
+    
     # Load the spade and racer-loader.
     def initialize(opts={})      
       @reactor = opts[:reactor]
@@ -67,6 +71,7 @@ module Spade
 
       super(opts) do |ctx|
         ctx['ENV'] = (opts[:env] || ENV).to_hash
+        ctx['ENV']['SPADE_PLATFORM'] = { 'ENGINE' => 'spade' }
         ctx['ARGV'] = opts[:argv] || ARGV
         
         # Load spade and patch in compiler and loader plugins
@@ -78,9 +83,7 @@ module Spade
           spade.loader = rubyLoader;
           spade.compiler = rubyCompiler;
           spade.defaultSandbox.rootdir = #{@rootdir.to_json};
-          require = function(id) { return spade.require(id); };
-          require.async = function(id, c) { return spade.async(id, c); };
-          require.sandbox = function(n, i) { return spade.sandbox(n,i); };
+          spade.globalize();
         ]
 
         ctx['rubyLoader'] = ctx['rubyCompiler'] = nil

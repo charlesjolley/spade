@@ -4,12 +4,8 @@
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
 
-require File.join(File.dirname(__FILE__), 'namespace')
-
 module Ivory
-  class Constants
-    
-    include Namespace
+  class Constants < Spade::Exports
     
     def self.defc(name, value)
       self.send(:define_method, name) do ||
@@ -586,4 +582,4 @@ module Ivory
   end
 end
 
-Spade.exports = Ivory::Constants.new
+Spade.exports = Ivory::Constants

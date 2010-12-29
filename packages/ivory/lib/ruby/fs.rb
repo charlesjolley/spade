@@ -5,11 +5,9 @@
 # ==========================================================================
 
 require 'fileutils'
-require File.join(File.dirname(__FILE__), 'namespace')
 
 module Ivory
-  class Fs
-    include Namespace
+  class Fs < Spade::Exports
   
     def initialize(ctx)
       @ctx = ctx
@@ -242,6 +240,6 @@ module Ivory
   end
 end
 
-Spade.exports = Ivory::Fs.new(Spade.current_context)
+Spade.exports = Ivory::Fs
 
 

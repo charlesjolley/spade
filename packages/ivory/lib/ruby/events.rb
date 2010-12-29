@@ -4,13 +4,9 @@
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
 
-require File.expand_path(File.join(__FILE__, '..', 'namespace'))
-
 module Ivory
-  class EventEmitterModule
+  class EventEmitterExports < Spade::Exports
 
-    include Namespace
-    
     class EventEmitter
       attr_accessor :_events
 
@@ -33,4 +29,4 @@ module Ivory
 
 end
 
-Spade.exports = Ivory::EventEmitterModule.new
+Spade.exports = Ivory::EventEmitterExports

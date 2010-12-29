@@ -4,12 +4,10 @@
 # License:   Licened under MIT license (see LICENSE)
 # ==========================================================================
 
-require File.join(File.dirname(__FILE__), 'namespace')
 require 'v8'
 
 module Ivory
-  class BufferModule
-    include Namespace
+  class BufferModule < Spade::Exports
     
     class SlowBuffer
       attr_reader :data
@@ -143,5 +141,5 @@ module Ivory
   end
 end
 
-Spade.exports = Ivory::BufferModule.new
+Spade.exports = Ivory::BufferModule
 
