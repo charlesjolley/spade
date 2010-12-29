@@ -20,8 +20,8 @@ module WebFile
       Dir.pwd
     end
     
-    def open(path, read_only = false)
-      RealFile.new path, self.context, read_only
+    def open(path, perms=nil, offset=nil, length=nil)
+      RealFile.new path, self.context, perms, offset, length
     end
     
     def exists(path)

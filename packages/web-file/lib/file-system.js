@@ -104,8 +104,14 @@ function createFileSystem(root, cwd, readOnly) {
     return new Stat(nat.stat(norm(path)));
   };
   
-  fs.open = function(path) {
-    return nat.open(norm(path), readOnly);
+  fs.open = function(path, opts) {
+    if (!opts) opts = {};
+    if (!('readable' in opts)) opts.readable = true;
+    if (!('writable' in opts) || readOnly) opts.writable = !readOnly;
+    if (!('executable' in opts)) opts.executable = false;
+    if (!('append' in opts)) opts.append = false;
+    if (!('modify' in opts) || opts.append) opts.modify = false;
+    return nat.open(norm(path), opts);
   };
   
   fs.exists = function(path) {

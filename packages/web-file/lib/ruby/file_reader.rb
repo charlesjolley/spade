@@ -42,24 +42,25 @@ module WebFile
     class FileReaderSync
       
       def readAsArrayBuffer(blob)
-        throw "FileReaderSync.readAsArrayBuffer() not yet implemented"
+        throw "Blob is not a real file" unless blob.instance_of? RealFile
+        blob.send(:read_sync, :buffer)
       end
 
       def readAsBinaryString(blob)
-        throw "FileReaderSync.readAsBinaryString() not yet implemented"
+        throw "Blob is not a real file" unless blob.instance_of? RealFile
+        blob.send(:read_sync, :binary)
       end
 
       def readAsText(blob, encoding=nil)
-        throw "FileReaderSync.readAsText() not yet implemented"
+        throw "Blob is not a real file" unless blob.instance_of? RealFile
+        blob.send(:read_sync, :text, encoding)
       end
 
       def readAsDataURL(blob)
-        throw "FileReaderSync.readAsDataURL() not yet implemented"
+        throw "Blob is not a real file" unless blob.instance_of? RealFile
+        blob.send(:read_sync, :data_url)
       end
 
-      def abort(*args)
-        throw "FileReaderSync.abort not yet implemented"
-      end
     end
       
   end

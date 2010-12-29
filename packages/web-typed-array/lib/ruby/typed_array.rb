@@ -60,7 +60,7 @@ module WebTypedArray
       protected
       
       def method_key
-        self.class.to_s.sub(/^.+:(.+)Array$/, '\1')
+        self.class.superclass.to_s.sub(/^.+:(.+)Array$/, '\1')
       end
         
       def getter_method
