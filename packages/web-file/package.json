@@ -1,0 +1,9 @@
+{
+  "name": "web-file",
+  "version": "0.0.1",
+  "description": "Implements the HTML5 File API where available",
+  
+  "dependencies": {
+    "web-typed-array": "0.0.1"
+  }
+}
