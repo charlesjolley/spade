@@ -7,7 +7,7 @@
 
 /*globals module test ok equals same CoreTest */
 
-sc_require('debug/test_suites/array/base');
+require('./base');
 
 SC.ArraySuite.define(function(T) {
 

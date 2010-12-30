@@ -4,8 +4,10 @@
 //            Portions ©2008-2010 Apple Inc. All rights reserved.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
 /*globals module test ok equals same CoreTest */
+
+require('sproutcore-runtime/core');
+require('../suite');
 
 /**
   Adds a new module of unit tests to verify that the passed object implements
@@ -44,7 +46,7 @@
   
   
 */
-SC.ArraySuite = CoreTest.Suite.create("Verify SC.Array compliance: %@#%@", {
+SC.ArraySuite = SC.Suite.create("Verify SC.Array compliance: %@#%@", {
   
   /** 
     Override to return a set of simple values such as numbers or strings.
@@ -144,7 +146,7 @@ SC.ArraySuite = CoreTest.Suite.create("Verify SC.Array compliance: %@#%@", {
       },
 
       init: function() {
-        sc_super() ;
+        this.superclass() ;
         this.resetObservers() ;
       },
       
