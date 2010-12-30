@@ -3,8 +3,10 @@
 // Copyright: ©2006-2010 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
 /*global module test equals context ok same notest */
+
+require('core-test/qunit');
+require('sproutcore-runtime/system/index_set');
 
 module("SC.IndexSet#min");
 
@@ -42,9 +44,9 @@ test("after removing all ranges", function() {
 test("newly created index, clearing and then adding", function() {
   var set = SC.IndexSet.create().add(4,2);
   equals(set.get('min'), 4, 'min should be lowest index');
-	set.clear()
+	set.clear();
   equals(set.get('min'), -1, 'min should be back to -1 with no content');
-	set.add(7, 3)
+	set.add(7, 3);
   equals(set.get('min'), 7, 'min should be lowest index');
 });
 

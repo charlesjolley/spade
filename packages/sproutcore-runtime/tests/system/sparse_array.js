@@ -2,6 +2,10 @@
 // SC.SparseArray Tests
 // ========================================================================
 /*globals module test ok isObj equals expects */
+
+require('core-test/qunit');
+require('sproutcore-runtime/system/sparse_array');
+
 var objectA = 23, objectB = 12, objectC = 31, numbers, new_numbers;
 module("SC.SparseArray") ;
 
@@ -182,13 +186,13 @@ var DummyDelegate = SC.Object.extend({
   
 });
 
-SC.ArraySuite.generate("SC.SparseArray", {
-  newObject: function(amt) {
-    if (amt === undefined || typeof amt === SC.T_NUMBER) {
-      amt = this.expected(amt);
-    }
-
-    var del = DummyDelegate.create({ content: amt });
-    return SC.SparseArray.create({ delegate: del });
-  }
-});
+// SC.ArraySuite.generate("SC.SparseArray", {
+//   newObject: function(amt) {
+//     if (amt === undefined || typeof amt === SC.T_NUMBER) {
+//       amt = this.expected(amt);
+//     }
+// 
+//     var del = DummyDelegate.create({ content: amt });
+//     return SC.SparseArray.create({ delegate: del });
+//   }
+// });

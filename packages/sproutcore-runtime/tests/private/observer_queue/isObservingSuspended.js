@@ -5,6 +5,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+require('core-test/qunit');
+require('sproutcore-runtime/private/observer_queue');
+
 var callCount, obj;
 
 module("SC.Observers.isObservingSuspended", {

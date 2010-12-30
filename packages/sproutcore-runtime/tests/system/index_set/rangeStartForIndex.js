@@ -3,8 +3,11 @@
 // Copyright: ©2006-2010 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
 /*global module test equals context ok same */
+
+require('core-test/qunit');
+require('sproutcore-runtime/system/index_set');
+
 var set, start, len ;
 module("SC.IndexSet#rangeStartForIndex", {
   setup: function() {

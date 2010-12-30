@@ -5,6 +5,10 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/index_set');
+
+
 var set ;
 
 module("SC.IndexSet.indexAfter", {

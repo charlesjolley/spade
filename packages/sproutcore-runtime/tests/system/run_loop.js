@@ -1,3 +1,14 @@
+// ==========================================================================
+// Project:   SproutCore - JavaScript Application Framework
+// Copyright: ©2006-2010 Apple Inc. and contributors.
+// License:   Licensed under MIT license (see license.js)
+// ==========================================================================
+
+require('core-test/qunit');
+require('sproutcore-runtime/system/run_loop');
+
+var first, second, third, binding1, binding2; 
+
 module("System:run_loop() - chained binding", {
   setup: function() {
     first = SC.Object.create({ 
@@ -49,7 +60,7 @@ test("Should propograte bindings after the RunLoop completes (using SC.RunLoop)"
 });
 
 test("Should propograte bindings after the RunLoop completes (using SC.beginRunLoop)", function() {
-	SC.beginRunLoop;
+	SC.RunLoop.begin();
 		//Binding of output of first object to input of second object
   		binding1 = SC.Binding.from("output", first).to("input", second).connect() ;
     	
@@ -67,7 +78,7 @@ test("Should propograte bindings after the RunLoop completes (using SC.beginRunL
 		
 		//since binding has not taken into effect the value still remains as change.
 		equals(second.get("output"), "first") ;
-	SC.endRunLoop; // allows bindings to trigger...
+	SC.RunLoop.end(); // allows bindings to trigger...
 	SC.Binding.flushPendingChanges() ; // actually sets up the connection
 	
 	//Value of the output variable changed to 'change'

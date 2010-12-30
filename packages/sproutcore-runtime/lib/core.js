@@ -283,6 +283,8 @@ SC.mixin(/** @scope SC */ {
       return false;
     } else if ( obj.objectAt ) {
       return true ;
+    } else if (jQuery.type(obj) === 'array') {
+      return true;
     } else if ( obj.length && jQuery.type(obj) === "object" ) {
       return true;
     }
@@ -717,7 +719,7 @@ SC.mixin(/** @scope SC */ {
 
     // convert path to object.
     var obj = this.objectForPropertyPath(path, root, stopAt) ;
-    return (obj && key) ? [obj === '__window__' ? null : obj,key] : null ;
+    return (obj && key) ? [obj,key] : null ;
   },
 
   /**
@@ -733,7 +735,7 @@ SC.mixin(/** @scope SC */ {
 
     var loc, nextDotAt, key, max ;
 
-    if (!root) root = '__window__' ;
+    if (!root) root = window ;
 
     // faster method for strings
     if (SC.typeOf(path) === SC.T_STRING) {
@@ -743,12 +745,7 @@ SC.mixin(/** @scope SC */ {
         nextDotAt = path.indexOf('.', loc) ;
         if ((nextDotAt < 0) || (nextDotAt > stopAt)) nextDotAt = stopAt;
         key = path.slice(loc, nextDotAt);
-        if (root === '__window__') {
-          if ('undefined' !== typeof window) root = window[key];
-          else root = eval(key);
-        } else {
-          root = root.get ? root.get(key) : root[key] ;
-        }
+        root = root.get ? root.get(key) : root[key] ;
         loc = nextDotAt+1;
       }
       if (loc < stopAt) root = undefined; // hit a dead end. :(

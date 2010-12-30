@@ -3,6 +3,10 @@
 // ========================================================================
 /*globals module test ok isObj equals expects Namespace */
 
+require('core-test/qunit');
+require('sproutcore-runtime/mixins/observable');
+require('sproutcore-runtime/system/object');
+
 var object, ObjectC, ObjectD, objectA, objectB ;
 
 // ..........................................................
@@ -638,16 +642,16 @@ test("removing an observer inside of an observer shouldn’t cause any problems"
   // The observable system should be protected against clients removing
   // observers in the middle of observer notification.
   var encounteredError = NO;
-  try {
+  //try {
     ObjectD.addObserver('observableValue', null, 'observer1');
     ObjectD.addObserver('observableValue', null, 'observer2');
     ObjectD.addObserver('observableValue', null, 'observer3');
     SC.run(function() { ObjectD.set('observableValue', "hi world"); });
-  }
-  catch(e) {
-    encounteredError = YES;
-  }
-  equals(encounteredError, NO);  
+  // }
+  // catch(e) {
+  //   encounteredError = YES;
+  // }
+  // equals(encounteredError, NO);  
 });
 
 

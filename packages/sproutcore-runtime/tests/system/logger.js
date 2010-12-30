@@ -4,6 +4,8 @@
 
 /*globals module test equals */
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/logger');
 
 // Test console needed because testing for null functions,
 // ie. setting the actual console.log = null means setting up

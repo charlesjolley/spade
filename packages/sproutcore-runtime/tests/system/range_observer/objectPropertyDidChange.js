@@ -6,6 +6,9 @@
 
 /*global module test equals context ok same notest */
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/range_observer');
+
 var source, indexes, observer, obj ; // base array to work with
 module("SC.RangeObserver#objectPropertyDidChange", {
   setup: function() {

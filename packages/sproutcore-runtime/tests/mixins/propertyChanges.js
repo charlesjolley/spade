@@ -1,3 +1,11 @@
+// ========================================================================
+// SC.Observable Tests
+// ========================================================================
+
+require('core-test/qunit');
+require('sproutcore-runtime/mixins/observable');
+require('sproutcore-runtime/system/object');
+
 var ObjectA;
 module("object.propertyChanges()", {	
 	setup: function() {

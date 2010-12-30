@@ -6,7 +6,6 @@
 // ==========================================================================
 
 require('../core');
-require('../system/set');
 
 // ........................................................................
 // OBSERVER QUEUE
@@ -141,10 +140,10 @@ SC.Observers = {
   /** @private */
   isObservingSuspended: 0,
 
-  _pending: SC.CoreSet.create(),
 
   /** @private */
   objectHasPendingChanges: function(obj) {
+    if (!this._pending) this._pending = SC.CoreSet.create();
     this._pending.add(obj) ; // save for later
   },
 
@@ -163,13 +162,17 @@ SC.Observers = {
       pending = this._pending ;
       this._pending = SC.CoreSet.create() ;
 
-      var idx, len = pending.length;
+      var idx, len = pending ? pending.length : 0;
       for(idx=0;idx<len;idx++) {
         pending[idx]._notifyPropertyObservers() ;
       }
-      pending.clear();
+      if (pending) pending.clear();
       pending = null ;
     }
   }
 
 } ;
+
+// these requires must be at the bottom because they depend on Observers exist
+require('../mixins/observable'); // must always be called before this
+require('../system/set');

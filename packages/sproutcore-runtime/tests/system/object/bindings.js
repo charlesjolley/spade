@@ -3,6 +3,9 @@
 // ========================================================================
 /*globals module test ok isObj equals expects TestNamespace */
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/object');
+
 var testObject, fromObject, extraObject, TestObject;
 
 module("bind() method", {

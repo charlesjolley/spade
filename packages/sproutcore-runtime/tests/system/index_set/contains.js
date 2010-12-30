@@ -3,8 +3,10 @@
 // Copyright: ©2006-2010 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
 /*global module test equals context ok same notest */
+
+require('core-test/qunit');
+require('sproutcore-runtime/system/index_set');
 
 var set ;
 module("SC.IndexSet#contains", {

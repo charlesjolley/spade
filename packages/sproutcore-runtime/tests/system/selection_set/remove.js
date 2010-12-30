@@ -4,6 +4,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/selection_set');
+
 var set, array, array2, expected, expected2 ;
 module("SC.SelectionSet#remove", {
   setup: function() {

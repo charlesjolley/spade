@@ -4,6 +4,9 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/selection_set');
+
 // TODO: Make these unit tests more complete.
 
 var set1, set2, content;

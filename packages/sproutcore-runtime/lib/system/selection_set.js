@@ -592,7 +592,7 @@ SC.SelectionSet = SC.Object.extend(SC.Enumerable, SC.Freezable, SC.Copyable,
     }
 
     if (this._objects) this._objects.freeze();
-    return sc_super();
+    return this.superclass();
   },
 
   // ..........................................................

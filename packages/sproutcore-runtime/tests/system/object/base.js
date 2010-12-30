@@ -3,6 +3,9 @@
 // ========================================================================
 /*globals module test ok isObj equals expects same plan TestNamespace*/
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/object');
+
 var obj, obj1, don, don1 ; // global variables
 
 module("A new SC.Object instance", {

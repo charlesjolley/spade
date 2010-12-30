@@ -3,6 +3,10 @@
 // ========================================================================
 /*globals module test ok isObj equals expects */
 
+require('core-test/qunit');
+require('sproutcore-runtime/mixins/observable');
+require('sproutcore-runtime/system/object');
+
 var revMatches = NO , ObjectA;
 
 module("object.propertyChanges", {  

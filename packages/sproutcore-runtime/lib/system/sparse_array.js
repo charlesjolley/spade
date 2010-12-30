@@ -111,7 +111,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.Array,
     between all instances.
   */
   init: function() {
-    sc_super();
+    this.superclass();
     this.requestedRangeIndex = [];
     
     this._TMP_PROVIDE_ARRAY = [];

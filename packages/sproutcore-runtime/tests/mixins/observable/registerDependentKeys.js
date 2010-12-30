@@ -4,8 +4,11 @@
 //            portions copyright @2009 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
 /*globals module test ok equals same */
+
+require('core-test/qunit');
+require('sproutcore-runtime/mixins/observable');
+require('sproutcore-runtime/system/object');
 
 var object ;
 
@@ -25,7 +28,7 @@ module("object.registerDependentKeys()", {
 
         // init to setup registerDependentKey...
         init: function() {
-          sc_super();
+          this.superclass();
           this.registerDependentKey('fullName', 'firstName', 'lastName');
         },
 

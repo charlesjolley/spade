@@ -3,6 +3,10 @@
 // ========================================================================
 /*globals module test ok isObj equals expects */
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/object');
+require('sproutcore-runtime/system/set');
+
 var a, b, c ; // global variables
 
 module("creating SC.Set instances", {

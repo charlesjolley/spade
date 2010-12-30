@@ -3,6 +3,9 @@
 // ========================================================================
 /*globals module test ok isObj equals expects */
 
+require('core-test/qunit');
+require('sproutcore-runtime/system/error');
+
 module("SC.ERROR");
 
 test("SC.Error.desc creates an error instance with description,label and code", function() {

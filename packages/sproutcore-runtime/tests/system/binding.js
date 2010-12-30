@@ -1,7 +1,11 @@
 // ========================================================================
 // SC.Binding Tests
 // ========================================================================
-/*globals module test ok isObj equals expects */
+/*globals TestNamespace */
+
+require('core-test/qunit');
+require('sproutcore-runtime/system/binding');
+require('sproutcore-runtime/system/object');
 
 var fromObject, toObject, binding, Bon1, bon2 ; // global variables
 
@@ -195,9 +199,7 @@ module("Custom Binding", {
   },
   
   teardown: function() { 
-    delete Bon1 ;
-    delete bon2 ;
-	//delete TestNamespace;
+    Bon1 = bon2 = TestNamespace = null;
   }
 });
 
@@ -260,7 +262,7 @@ test("two bindings to the same value should sync in the order they are initializ
     }),
     
     init: function() {
-      sc_super();
+      this.superclass();
       this.set('c', this.C.create({ owner: this }));
     }
     

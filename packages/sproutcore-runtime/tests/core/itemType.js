@@ -74,9 +74,7 @@ test("SC.isArray" ,function(){
   equals( SC.isArray(fn),       false, "function() {}" );
   
   // only test if we are in the browser
-  if ('undefined' !== typeof window) {
-    equals( SC.isArray(window),   false, "window" );
-  }
+  equals( SC.isArray(window),   false, "window" );
   
   if ('undefined' !== typeof document) {
     nodelist = document.getElementsByTagName("body");

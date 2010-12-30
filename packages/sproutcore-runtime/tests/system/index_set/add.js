@@ -3,8 +3,11 @@
 // Copyright: ©2006-2010 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
+/*global module test equals context ok same raises*/
 
-/*global module test equals context ok same should_throw*/
+require('core-test/qunit');
+require('sproutcore-runtime/system/index_set');
+
 var set ;
 module("SC.IndexSet#add", {
   setup: function() {
@@ -188,7 +191,7 @@ test("appending range to start of empty set should create a single range", funct
 });
 
 test("add raises exception when frozen", function() {
-  should_throw(function() {
+  raises(function() {
     set.freeze().add(0,2);    
   }, SC.FROZEN_ERROR);  
 });

@@ -2,6 +2,10 @@
 
 /*globals module test ok equals same stop start */
 
+require('core-test/qunit');
+require('sproutcore-runtime/private/observer_set');
+require('sproutcore-runtime/system/object');
+
 module("Problematic SC.ObserverSet.getMethods() removal", {
   setup: function () {
     SC.LOG_OBSERVERS = YES;

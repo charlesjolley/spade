@@ -3,8 +3,11 @@
 // Copyright: ©2006-2010 Apple Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-
 /*global module test equals context ok same notest should_throw*/
+
+require('core-test/qunit');
+require('sproutcore-runtime/system/index_set');
+
 var set ;
 module("SC.IndexSet#remove", {
   setup: function() {
@@ -183,7 +186,7 @@ test("removing an index range outside of target range (specific bug)", function(
 });
 
 test("remove() raises exception when frozen", function() {
-  should_throw(function() {
+  raises(function() {
     set.freeze().remove(0,2);    
   }, SC.FROZEN_ERROR);  
 });
