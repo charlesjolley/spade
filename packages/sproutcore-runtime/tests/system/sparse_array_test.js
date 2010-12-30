@@ -5,7 +5,7 @@
 
 require('core-test/qunit');
 require('sproutcore-runtime/system/sparse_array');
-require('sproutcore-runtime/debug/test_suites/array');
+require('sproutcore-runtime/~tests/test_suites/array');
 
 var objectA = 23, objectB = 12, objectC = 31, numbers, new_numbers;
 module("SC.SparseArray") ;

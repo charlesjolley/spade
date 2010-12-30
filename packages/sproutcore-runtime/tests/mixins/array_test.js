@@ -7,7 +7,7 @@
 
 require('core-test/qunit');
 require('sproutcore-runtime/mixins/array');
-require('sproutcore-runtime/debug/test_suites/array');
+require('sproutcore-runtime/~tests/test_suites/array');
 
 // Unit test some standard SC.Array implementations.
 
