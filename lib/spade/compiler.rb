@@ -16,7 +16,7 @@ module Spade
     
     def setup(sandbox)
       if sandbox['isIsolated']
-        sandbox['ctx'] = Context.new :process => @ctx.process
+        sandbox['ctx'] = Context.new :reactor => @ctx.reactor
       end
     end
     
