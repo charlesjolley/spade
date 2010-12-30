@@ -32,6 +32,7 @@ module Spade
       super(opts) do |ctx|
         ctx['reactor'] = @reactor
         ctx['console'] = Console.new
+        ctx['window']  = ctx.scope
         ctx.eval %[
           (function() {
             var r = reactor;
