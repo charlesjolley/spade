@@ -699,6 +699,7 @@ SC.Object.prototype = {
     @returns {SC.Object} receiver
   */
   invokeOnce: function(method) {
+    if (!SC.RunLoop.currentRunLoop) SC.RunLoop.begin();
     SC.RunLoop.currentRunLoop.invokeOnce(this, method) ;
     return this ;
   },
