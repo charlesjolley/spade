@@ -56,8 +56,6 @@ module Spade
     # exposed to JS.  Find the JS file on disk and register the module
     def loadFactory(spade, id, formats, done=nil)
       
-      puts formats
-      
       # load individual files
       if id =~ /^\(file\)\//
         js_path = id[6..-1]
