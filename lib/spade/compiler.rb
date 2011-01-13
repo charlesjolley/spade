@@ -20,7 +20,7 @@ module Spade
       end
     end
     
-    def compile(sandbox, data, filename)
+    def compile(data, sandbox, filename)
       ctx = sandbox['ctx'] || @ctx
       ctx.eval("(#{data})", filename)
     end

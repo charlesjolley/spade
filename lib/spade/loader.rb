@@ -54,7 +54,9 @@ module Spade
     end
     
     # exposed to JS.  Find the JS file on disk and register the module
-    def loadFactory(spade, id, done=nil)
+    def loadFactory(spade, id, formats, done=nil)
+      
+      puts formats
       
       # load individual files
       if id =~ /^\(file\)\//
@@ -69,10 +71,14 @@ module Spade
       parts = id.split '/'
       package_name = parts.shift
       package_info = packages[package_name]
+      skip_module  = false
       
       return nil if package_info.nil?
 
-      if parts.size>0 && parts[0].chars.first == '~'
+      if parts.size==1 && parts[0] == '~package'
+        skip_module = true
+      
+      elsif parts.size>0 && parts[0].chars.first == '~'
         dirname = parts.shift[1..-1]
         if package_info[:directories][dirname]
           dirname = package_info[:directories][dirname]
@@ -84,30 +90,48 @@ module Spade
         dirname = 'lib' if dirname.nil?
       end
       
-      # register the package first
+      # register the package first - also make sure dependencies are 
+      # registered since they are needed for loading plugins
       unless package_info[:registered]
         package_info[:registered] = true
         @ctx.eval "spade.register('#{package_name}', #{package_info[:json].to_json});"
+        
+        deps = package_info[:json]['dependencies'];
+        (deps||[]).each do |dep_name, ignored|
+          dep_package_info = packages[dep_name]
+          next unless dep_package_info && !dep_package_info[:registered]
+          dep_package_info[:registered] = true
+          @ctx.eval "spade.register('#{dep_name}', #{dep_package_info[:json].to_json});"
+        end
+              
       end
       
-      filename = parts.pop
-      js_path = File.join(package_info[:path], dirname, parts, filename+'.js')
-      rb_path = File.join(package_info[:path], dirname, parts, filename+'.rb')
-      if File.exist? js_path
-        load_module id, js_path
-        return nil
+      unless skip_module
+        filename = parts.pop
+        base_path = package_info[:path]
+        formats = ['js'] if formats.nil?
+        formats.each do |fmt|
+          cur_path = File.join(base_path, dirname, parts, filename+'.'+fmt)
+          if File.exist? cur_path
+            load_module id, cur_path, fmt, cur_path
+            return nil
+          end
+        end
         
-      elsif File.exists? rb_path
-        load_ruby id, rb_path
-        return nil
+        rb_path = File.join(package_info[:path],dirname,parts, filename+'.rb')
+        if File.exists? rb_path
+          load_ruby id, rb_path
+          return nil
+        end
+        
       end
       
       return nil
     end
     
-    def load_module(id, module_path)
+    def load_module(id, module_path, format, path)
       module_contents = File.read(module_path).to_json # encode as string
-      @ctx.eval("spade.register('#{id}',#{module_contents});")
+      @ctx.eval("spade.register('#{id}',#{module_contents}, { format: #{format.to_s.to_json}, filename: #{path.to_s.to_json} });")
       nil
     end
     

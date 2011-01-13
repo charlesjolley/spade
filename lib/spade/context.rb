@@ -67,12 +67,18 @@ module Spade
     
     # Load the spade and racer-loader.
     def initialize(opts={})      
+      env = opts[:env] || ENV
       @rootdir = opts[:rootdir] || opts['rootdir']
       @reactor = opts[:reactor] ||= Reactor.new(self)
+      lang = opts[:language] ||= (env['LANG']||'en_US').gsub(/\..*/, '')
+      lang = lang.gsub '_', '-'
+      
 
       super(opts) do |ctx|
-        ctx['ENV'] = (opts[:env] || ENV).to_hash
-        ctx['ENV']['SPADE_PLATFORM'] = { 'ENGINE' => 'spade' }
+        ctx['ENV'] = env.to_hash
+        ctx['ENV']['SPADE_PLATFORM'] = { 'ENGINE'   => 'spade' }
+        ctx['ENV']['LANG'] = lang
+         
         ctx['ARGV'] = opts[:argv] || ARGV
         
         # Load spade and patch in compiler and loader plugins
