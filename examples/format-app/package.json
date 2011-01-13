@@ -4,6 +4,7 @@
   
   "dependencies": {
     "text": "1.0.0",
-    "json": "1.0.0"
+    "json": "1.0.0",
+    "coffee-script": "1.0.1-pre"
   }
 }
