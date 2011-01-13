@@ -1,0 +1,9 @@
+{
+  "name": "format-app",
+  "description": "Example application for reading files from multiple formats",
+  
+  "dependencies": {
+    "text": "1.0.0",
+    "json": "1.0.0"
+  }
+}
