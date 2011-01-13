@@ -76,16 +76,8 @@ module Spade
       if parts.size==1 && parts[0] == '~package'
         skip_module = true
       
-      elsif parts.size>0 && parts[0].chars.first == '~'
-        dirname = parts.shift[1..-1]
-        if package_info[:directories][dirname]
-          dirname = package_info[:directories][dirname]
-        else
-          dirname = dirname
-        end
       else
-        dirname = package_info[:directories]['lib']
-        dirname = 'lib' if dirname.nil?
+        dirname = extract_dirname(parts, package_info)
       end
       
       # register the package first - also make sure dependencies are 
@@ -125,6 +117,34 @@ module Spade
       end
       
       return nil
+    end
+
+    # exposed to JS.  Determines if the named id exists in the system
+    def exists(spade, id, formats)
+      
+      # individual files
+      return File.exists?(id[6..-1]) if id =~ /^\(file\)\//
+
+      parts = id.split '/'
+      package_name = parts.shift
+      package_info = packages[package_name]
+      
+      return false if package_info.nil?
+      return true if parts.size==1 && parts[0] == '~package'
+      
+      dirname = extract_dirname(parts, package_info)
+      
+      
+      filename = parts.pop
+      base_path = package_info[:path]
+      formats = ['js'] if formats.nil?
+      formats.each do |fmt|
+        cur_path = File.join(base_path, dirname, parts, filename+'.'+fmt)
+        return true if File.exist? cur_path
+      end
+      
+      rb_path = File.join(package_info[:path],dirname,parts, filename+'.rb')
+      return File.exists? rb_path
     end
     
     def load_module(id, module_path, format, path)
@@ -169,6 +189,22 @@ module Spade
     end
     
     private
+
+    def extract_dirname(parts, package_info)
+      if parts.size>0 && parts[0].chars.first == '~'
+        dirname = parts.shift[1..-1]
+        if package_info[:directories][dirname]
+          dirname = package_info[:directories][dirname]
+        else
+          dirname = dirname
+        end
+      else
+        dirname = package_info[:directories]['lib']
+        dirname = 'lib' if dirname.nil?
+      end
+      
+      dirname
+    end
 
     def add_package(path)
       json_package = File.join(path, 'package.json')
