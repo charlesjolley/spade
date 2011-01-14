@@ -57,7 +57,7 @@ module Spade
     def loadFactory(spade, id, formats, done=nil)
       
       # load individual files
-      if id =~ /^\(file\)\//
+      if id =~ /^file:\/\//
         js_path = id[6..-1]
         if File.exists? js_path
           load_module id, js_path
@@ -214,6 +214,7 @@ module Spade
       return if json.nil?
 
       directories = json["directories"] || { "lib" => "lib" }
+      json["root"] = "file:/"+File.split(path).join('/')
       @packages[json["name"]] = { 
         :registered => false,
         :path => path, 
