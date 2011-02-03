@@ -57,10 +57,10 @@ module Spade
     def loadFactory(spade, id, formats, done=nil)
       
       # load individual files
-      if id =~ /^file:\/\//
-        js_path = id[6..-1]
+      if id =~ /^file:\//
+        js_path = id[5..-1]
         if File.exists? js_path
-          load_module id, js_path
+          load_module id, js_path, ['js'], js_path
         end
         return nil
       end
@@ -123,7 +123,7 @@ module Spade
     def exists(spade, id, formats)
       
       # individual files
-      return File.exists?(id[6..-1]) if id =~ /^\(file\)\//
+      return File.exists?(id[5..-1]) if id =~ /^file:\//
 
       parts = id.split '/'
       package_name = parts.shift
